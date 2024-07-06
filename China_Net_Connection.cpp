@@ -42,7 +42,7 @@ void Draw_Red_Line(Provincial_Capital, Provincial_Capital);//绘制两点红线
 float Calculate_Distance(Provincial_Capital capital1, Provincial_Capital capital2);//计算capital1和capital2的直线距离
 void Clear();//清屏并且重置所有为绿
 void Destroy_Point(int num);//摧毁城市节点
-void Destroy_Line(int m, int n);
+void Destroy_Line(int m, int n);//摧毁单线路
 
 //void Prim(int Max_num, float Distance_Matrix_x[][Max_V],int start);
 void Prim( float Distance_Matrix_x[][Max_V]);
@@ -53,12 +53,18 @@ int main()
     Init_Matrix();//初始化城市距离矩阵
     Create_Window();
     Init_All_GreenPoint(capitals[0]);
-    
-    Destroy_Point(6);
-    //Destroy_Point(8); 
-    //Destroy_Point(9);
-    //Destroy_Point(17);
+    Prim(Distance_Matrix);
 
+    Sleep(5000);
+    Clear();
+    Init_Matrix();
+    Destroy_Point(26);
+    Prim(Distance_Matrix);
+
+    Sleep(5000);
+    Clear();
+    Init_Matrix();
+    Destroy_Point(26);
     Destroy_Line(28, 30);
 
     Prim(Distance_Matrix);
@@ -157,6 +163,18 @@ void RedPoint(Provincial_Capital capital)
     );
 }
 
+void OrangePoint(Provincial_Capital capital)
+{
+    setlinestyle(PS_SOLID);
+    setlinecolor(COLORREF(RGB(255, 173, 51)));
+    setfillcolor(COLORREF(RGB(255, 173, 51)));
+    fillcircle(
+        capital.position_x,
+        capital.position_y,
+        8
+    );
+}
+
 void Init_All_GreenPoint(Provincial_Capital capital)
 {
     for (int i = 0; i < Max_V; i++)
@@ -204,7 +222,9 @@ void Destroy_Point(int num)
 
 void Destroy_Line(int m, int n) 
 {
-    Draw_Red_Line(capitals[m], capitals[n]);
+    OrangePoint(capitals[m]);//给被摧毁的两个点改为橙色
+    OrangePoint(capitals[n]);
+    Draw_Red_Line(capitals[m], capitals[n]);//绘制被摧毁的线路为红色
     Distance_Matrix[m][n] = INT_MAX;
     Distance_Matrix[n][m] = INT_MAX;
 
